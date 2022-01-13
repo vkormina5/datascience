@@ -1,0 +1,197 @@
+pip install apriori_python
+pip install fpgrowth_py
+pip install pandas
+
+from apriori_python import apriori
+itemSetList = [['футболка', 'куртка', 'шапка', 'шарф'],
+                ['футболка', 'штаны', 'кофта'],
+                ['куртка', 'шарф', 'шапка', 'кофта'],
+                ['футболка', 'кофта'],
+                ['куртка', 'шапка', 'шарф', 'кофта'],
+                ['футболка', 'штаны', 'кофта'],
+                ['футболка', 'куртка', 'шапка', 'шарф'],
+                ['футболка', 'куртка', 'шапка', 'шарф'],
+                ['штаны', 'куртка', 'шапка', 'шарф'],
+                ['футболка', 'кофта'],
+                ['футболка', 'штаны', 'куртка'],
+                ['футболка', 'кофта'],
+                ['футболка', 'штаны', 'куртка', 'кофта'],
+                ['кофта', 'штаны', 'куртка'],
+                ['футболка', 'штаны', 'куртка', 'кофта'],
+                ['футболка', 'куртка'],
+                ['шапка', 'шарф'],
+                ['куртка', 'штаны'],
+                ['футболка', 'куртка'],
+                ['футболка', 'штаы', 'шапка', 'шарф'],
+                ['футболка', 'штаны', 'кофта'],
+                ['шапка', 'шарф'],
+                ['кофта', 'штаны'],
+                ['футболка', 'штаны', 'куртка'],
+                ['футболка', 'штаны', 'куртка'],
+                ['штаны'],
+                ['футболка'],
+                ['куртка', 'кофта'],
+                ['штаны', 'куртка', 'шапка', 'шарф'],
+                ['футболка', 'шапка', 'шарф']]
+freqItemSet, rules = apriori(itemSetList, minSup=0.3, minConf=0.5)
+print(rules)
+
+from PyARMViz import datasets
+from PyARMViz import *
+
+from efficient_apriori import apriori as e_apriori
+
+e_freqItemSet, e_rules = e_apriori(itemSetList, min_support=0.2, min_confidence=0.2)
+#print(rules)
+PyARMViz.metadata_scatter_plot(e_rules)
+from efficient_apriori import apriori
+itemSetList = [['футболка', 'куртка', 'шапка', 'шарф'],
+                ['футболка', 'штаны', 'кофта'],
+                ['куртка', 'шарф', 'шапка', 'кофта'],
+                ['футболка', 'кофта'],
+                ['куртка', 'шапка', 'шарф', 'кофта'],
+                ['футболка', 'штаны', 'кофта'],
+                ['футболка', 'куртка', 'шапка', 'шарф'],
+                ['футболка', 'куртка', 'шапка', 'шарф'],
+                ['штаны', 'куртка', 'шапка', 'шарф'],
+                ['футболка', 'кофта'],
+                ['футболка', 'штаны', 'куртка'],
+                ['футболка', 'кофта'],
+                ['футболка', 'штаны', 'куртка', 'кофта'],
+                ['кофта', 'штаны', 'куртка'],
+                ['футболка', 'штаны', 'куртка', 'кофта'],
+                ['футболка', 'куртка'],
+                ['шапка', 'шарф'],
+                ['куртка', 'штаны'],
+                ['футболка', 'куртка'],
+                ['футболка', 'штаы', 'шапка', 'шарф'],
+                ['футболка', 'штаны', 'кофта'],
+                ['шапка', 'шарф'],
+                ['кофта', 'штаны'],
+                ['футболка', 'штаны', 'куртка'],
+                ['футболка', 'штаны', 'куртка'],
+                ['штаны'],
+                ['футболка'],
+                ['куртка', 'кофта'],
+                ['штаны', 'куртка', 'шапка', 'шарф'],
+                ['футболка', 'шапка', 'шарф']]
+freqItemSet, rules = apriori(itemSetList, min_support=0.3, min_confidence=0.5)
+print(rules)
+
+from fpgrowth_py import fpgrowth
+
+f_freqItemSet, f_rules = fpgrowth(itemSetList, minSupRatio=0.3, minConf=0.3)
+print(f_freqItemSet)
+print(f_rules)
+
+from time import time
+def measure(action):
+    start = time()
+    result = action()
+    end = time()
+    return end - start, result
+
+confidence_probes = [ x / 10 for x in range(1, 11, 1) ]
+algorithms = [
+    lambda conf: lambda: fpgrowth(itemSetList, minSupRatio=0.01, minConf=conf),
+    lambda conf: lambda: e_apriori(itemSetList, min_support=0.01, min_confidence=conf),
+    lambda conf: lambda: apriori(itemSetList, min_support=0.01, min_confidence=conf)
+]
+result = {}
+for conf in confidence_probes:
+    result[conf] = {}
+    for n, algorithm in enumerate(algorithms):
+        elapsed, _ = measure(algorithm(conf))
+        result[conf][n] = elapsed
+result
+
+import matplotlib.pyplot as plt
+x = confidence_probes
+y0 = list(map(lambda conf: result[conf][0] ,result))
+y1 = list(map(lambda conf: result[conf][1] ,result))
+y2 = list(map(lambda conf: result[conf][2] ,result))
+plt.plot(x, y0, label="fpgrowth")
+plt.plot(x, y1, label="efficent_apriori")
+plt.plot(x, y2, label="apriori_python")
+plt.legend()
+plt.show()
+
+import numpy as np
+import pandas as pd
+
+dts = pd.read_csv(r'/users/mac/Desktop/BB.csv')
+print(dfs)
+
+list_test = list(dts['Transaction'])
+list_tr = list()
+for x in list_test:
+  list_tr.append(x)
+print(list_tr)
+
+dict_t = dict.fromkeys(set(range(1,31)),0)
+print(dict_t)
+
+a = list()
+c = 1
+i = 0
+repoItems = list()
+for x in dts.Item:
+    if list_tr[i] == c:
+      a.append(x)
+    else:
+      b = list(a)
+      dict_t[c] = b
+      c = list_tr[i]
+      a.clear()
+      a.append(x)
+    i+=1
+    if i == 30: # регулирует количество транзакций, если использовать key_t
+        break
+
+b1 = list(dict_t.values())
+for i in  b1: # можно убрать, если весь набор транзакций
+  if i !=0:
+    repoItems.append(i)
+print(repoItems)
+
+from apriori_python import apriori
+
+freqItemSet, rules = apriori(repoItems, minSup=0.1, minConf=0.1)
+print(rules)
+
+from efficient_apriori import apriori as e_apriori
+
+freqItemSet, rules = e_apriori(repoItems, min_support=0.1, min_confidence=0.1)
+print(rules)
+PyARMViz.metadata_scatter_plot(rules)
+
+from time import time
+def measure(action):
+    start = time()
+    result = action()
+    end = time()
+    return end - start, result
+
+confidence_probes = [ x / 10 for x in range(1, 11, 1) ]
+algorithms = [
+    lambda conf: lambda: fpgrowth(repoItems, minSupRatio=0.01, minConf=conf),
+    lambda conf: lambda: e_apriori(repoItems, min_support=0.01, min_confidence=conf),
+    lambda conf: lambda: apriori(repoItems, minSup=0.01, minConf=conf)
+]
+result = {}
+for conf in confidence_probes:
+    result[conf] = {}
+    for n, algorithm in enumerate(algorithms):
+        elapsed, _ = measure(algorithm(conf))
+        result[conf][n] = elapsed
+result
+
+x = confidence_probes
+y0 = list(map(lambda conf: result[conf][0] ,result))
+y1 = list(map(lambda conf: result[conf][1] ,result))
+y2 = list(map(lambda conf: result[conf][2] ,result))
+plt.plot(x, y0, label="fpgrowth")
+plt.plot(x, y1, label="efficent_apriori")
+plt.plot(x, y2, label="apriori_python")
+plt.legend()
+plt.show()
